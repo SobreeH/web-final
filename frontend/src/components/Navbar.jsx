@@ -67,7 +67,7 @@ const Navbar = () => {
         ) : (
           <button
             onClick={() => navigate("/login")}
-            className="pointer-events-auto relative z-9999  bg-blue-500 text-white px-8 py-3 rounded-full font-light hidden md:block"
+            className="pointer-events-auto relative z-9999  bg-blue-500 text-white px-8 py-3 rounded-full font-light hidden md:block cursor-pointer"
           >
             Create Account
           </button>
