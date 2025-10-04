@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import { doctors } from "../assets/frontend/assets";
+
 export const AppContext = createContext();
 
 const AppContextProvider = (props) => {
@@ -8,7 +9,7 @@ const AppContextProvider = (props) => {
   };
 
   return (
-    <AppContextProvider value={value}>{props.children}</AppContextProvider>
+    <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
   );
 };
 
