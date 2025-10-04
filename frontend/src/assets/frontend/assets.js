@@ -30,6 +30,9 @@ import doc12 from './doc12.png'
 import doc13 from './doc13.png'
 import doc14 from './doc14.png'
 import doc15 from './doc15.png'
+import doc16 from './doc16.png'
+import doc17 from './doc17.png'
+
 import Dermatologist from './Dermatologist.svg'
 import Gastroenterologist from './Gastroenterologist.svg'
 import General_physician from './General_physician.svg'
@@ -228,7 +231,7 @@ export const doctors = [
     },
     {
         _id: 'doc11',
-        name: 'Dr. K',
+        name: 'Dr. Kamtorn Kerdthip',
         image: doc11,
         speciality: 'Neurologist',
         degree: 'MBBS',
@@ -242,7 +245,7 @@ export const doctors = [
     },
     {
         _id: 'doc12',
-        name: 'Dr. Tom',
+        name: 'Dr. Phakdee Tuansiri',
         image: doc12,
         speciality: 'Neurologist',
         degree: 'MBBS',
@@ -256,7 +259,7 @@ export const doctors = [
     },
     {
         _id: 'doc13',
-        name: 'Dr. Chloe Evans',
+        name: 'Dr. Kritsadee Phuangrod',
         image: doc13,
         speciality: 'General physician',
         degree: 'MBBS',
@@ -270,7 +273,7 @@ export const doctors = [
     },
     {
         _id: 'doc14',
-        name: 'Dr. Ryan Martinez',
+        name: 'Dr. Sakiroh Yaena Benharoon',
         image: doc14,
         speciality: 'Gynecologist',
         degree: 'MBBS',
@@ -284,7 +287,7 @@ export const doctors = [
     },
     {
         _id: 'doc15',
-        name: 'Dr. Amelia Hill',
+        name: 'Dr. Sittikorn Tapsuwan',
         image: doc15,
         speciality: 'Dermatologist',
         degree: 'MBBS',
@@ -296,4 +299,32 @@ export const doctors = [
             line2: 'Rusamilae, Mueang Pattani District, Pattani'
         }
     },
+{
+    _id: 'doc16',
+    name: 'Dr. Piti Maneenetra',
+    image: doc16,
+    speciality: 'Gastroenterologist',
+    degree: 'MBBS',
+    experience: '4 Years',
+    about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+    fees: 50,
+    address: {
+        line1: '57th Road, Charoen Pradit Rd',
+        line2: 'Rusamilae, Mueang Pattani District, Pattani'
+    }
+},
+{
+    _id: 'doc17',
+    name: 'Dr. Kewabhorn Sangkhamart',
+    image: doc17,
+    speciality: 'Gastroenterologist',
+    degree: 'MBBS',
+    experience: '4 Years',
+    about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
+    fees: 50,
+    address: {
+        line1: '57th Road, Charoen Pradit Rd',
+        line2: 'Rusamilae, Mueang Pattani District, Pattani'
+    }
+}
 ]
