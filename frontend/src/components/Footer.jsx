@@ -30,7 +30,7 @@ const Footer = () => {
           <p className="text-xl font-medium mb-5">GET IN TOUCH</p>
           <ul className="flex flex-col gap-2 text-gray-600">
             <li>+66 073 313 928</li>
-            <li>faculty@comsci.pn.psu.ac.th</li>
+            <li>6620610023@email.psu.ac.th</li>
           </ul>
         </div>
         <div></div>
