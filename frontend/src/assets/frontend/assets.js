@@ -88,7 +88,7 @@ export const specialityData = [
 export const doctors = [
     {
         _id: 'doc1',
-        name: 'Dr. Richard James',
+        name: 'Dr. Sumpunt Khongmark',
         image: doc1,
         speciality: 'General physician',
         degree: 'MBBS',
@@ -96,13 +96,13 @@ export const doctors = [
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
         fees: 50,
         address: {
-            line1: '17th Cross, Richmond',
-            line2: 'Circle, Ring Road, London'
+            line1: '17th Road, Charoen Pradit Rd',
+            line2: 'Rusamilae, Mueang Pattani District, Pattani'
         }
     },
     {
         _id: 'doc2',
-        name: 'Dr. Emily Larson',
+        name: 'Dr. Sariya Binsaleh',
         image: doc2,
         speciality: 'Gynecologist',
         degree: 'MBBS',
@@ -110,13 +110,13 @@ export const doctors = [
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
         fees: 60,
         address: {
-            line1: '27th Cross, Richmond',
-            line2: 'Circle, Ring Road, London'
+            line1: '27th Road, Charoen Pradit Rd',
+            line2: 'Rusamilae, Mueang Pattani District, Pattani'
         }
     },
     {
         _id: 'doc3',
-        name: 'Dr. Sarah Patel',
+        name: 'Dr. Muazzan Binsaleh',
         image: doc3,
         speciality: 'Dermatologist',
         degree: 'MBBS',
@@ -124,13 +124,13 @@ export const doctors = [
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
         fees: 30,
         address: {
-            line1: '37th Cross, Richmond',
-            line2: 'Circle, Ring Road, London'
+            line1: '37th Road, Charoen Pradit Rd',
+            line2: 'Rusamilae, Mueang Pattani District, Pattani'
         }
     },
     {
         _id: 'doc4',
-        name: 'Dr. Christopher Lee',
+        name: 'Dr. Thitima Theppaya',
         image: doc4,
         speciality: 'Pediatricians',
         degree: 'MBBS',
@@ -138,13 +138,13 @@ export const doctors = [
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
         fees: 40,
         address: {
-            line1: '47th Cross, Richmond',
-            line2: 'Circle, Ring Road, London'
+            line1: '47th Road, Charoen Pradit Rd',
+            line2: 'Rusamilae, Mueang Pattani District, Pattani'
         }
     },
     {
         _id: 'doc5',
-        name: 'Dr. Jennifer Garcia',
+        name: 'Dr. Zamree Che-aron',
         image: doc5,
         speciality: 'Neurologist',
         degree: 'MBBS',
@@ -152,13 +152,13 @@ export const doctors = [
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
         fees: 50,
         address: {
-            line1: '57th Cross, Richmond',
-            line2: 'Circle, Ring Road, London'
+            line1: '57th Road, Charoen Pradit Rd',
+            line2: 'Rusamilae, Mueang Pattani District, Pattani'
         }
     },
     {
         _id: 'doc6',
-        name: 'Dr. Andrew Williams',
+        name: 'Dr. Muhammadsuhaimi Yanya',
         image: doc6,
         speciality: 'Neurologist',
         degree: 'MBBS',
@@ -166,13 +166,13 @@ export const doctors = [
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
         fees: 50,
         address: {
-            line1: '57th Cross, Richmond',
-            line2: 'Circle, Ring Road, London'
+            line1: '57th Road, Charoen Pradit Rd',
+            line2: 'Rusamilae, Mueang Pattani District, Pattani'
         }
     },
     {
         _id: 'doc7',
-        name: 'Dr. Christopher Davis',
+        name: 'Dr. Wannisa Matcha',
         image: doc7,
         speciality: 'General physician',
         degree: 'MBBS',
@@ -180,13 +180,13 @@ export const doctors = [
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
         fees: 50,
         address: {
-            line1: '17th Cross, Richmond',
-            line2: 'Circle, Ring Road, London'
+            line1: '17th Road, Charoen Pradit Rd',
+            line2: 'Rusamilae, Mueang Pattani District, Pattani'
         }
     },
     {
         _id: 'doc8',
-        name: 'Dr. Timothy White',
+        name: 'Dr. Daranat Tansui',
         image: doc8,
         speciality: 'Gynecologist',
         degree: 'MBBS',
@@ -194,13 +194,13 @@ export const doctors = [
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
         fees: 60,
         address: {
-            line1: '27th Cross, Richmond',
-            line2: 'Circle, Ring Road, London'
+            line1: '27th Road, Charoen Pradit Rd',
+            line2: 'Rusamilae, Mueang Pattani District, Pattani'
         }
     },
     {
         _id: 'doc9',
-        name: 'Dr. Ava Mitchell',
+        name: 'Dr. Jarungwit Boonperm',
         image: doc9,
         speciality: 'Dermatologist',
         degree: 'MBBS',
@@ -208,13 +208,13 @@ export const doctors = [
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
         fees: 30,
         address: {
-            line1: '37th Cross, Richmond',
-            line2: 'Circle, Ring Road, London'
+            line1: '37th Road, Charoen Pradit Rd',
+            line2: 'Rusamilae, Mueang Pattani District, Pattani'
         }
     },
     {
         _id: 'doc10',
-        name: 'Dr. Jeffrey King',
+        name: 'Dr. Ahmarn Mudcharoen',
         image: doc10,
         speciality: 'Pediatricians',
         degree: 'MBBS',
@@ -222,13 +222,13 @@ export const doctors = [
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
         fees: 40,
         address: {
-            line1: '47th Cross, Richmond',
-            line2: 'Circle, Ring Road, London'
+            line1: '47th Road, Charoen Pradit Rd',
+            line2: 'Rusamilae, Mueang Pattani District, Pattani'
         }
     },
     {
         _id: 'doc11',
-        name: 'Dr. Zoe Kelly',
+        name: 'Dr. K',
         image: doc11,
         speciality: 'Neurologist',
         degree: 'MBBS',
@@ -236,13 +236,13 @@ export const doctors = [
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
         fees: 50,
         address: {
-            line1: '57th Cross, Richmond',
-            line2: 'Circle, Ring Road, London'
+            line1: '57th Road, Charoen Pradit Rd',
+            line2: 'Rusamilae, Mueang Pattani District, Pattani'
         }
     },
     {
         _id: 'doc12',
-        name: 'Dr. Patrick Harris',
+        name: 'Dr. Tom',
         image: doc12,
         speciality: 'Neurologist',
         degree: 'MBBS',
@@ -250,8 +250,8 @@ export const doctors = [
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
         fees: 50,
         address: {
-            line1: '57th Cross, Richmond',
-            line2: 'Circle, Ring Road, London'
+            line1: '57th Road, Charoen Pradit Rd',
+            line2: 'Rusamilae, Mueang Pattani District, Pattani'
         }
     },
     {
@@ -264,8 +264,8 @@ export const doctors = [
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
         fees: 50,
         address: {
-            line1: '17th Cross, Richmond',
-            line2: 'Circle, Ring Road, London'
+            line1: '17th Road, Charoen Pradit Rd',
+            line2: 'Rusamilae, Mueang Pattani District, Pattani'
         }
     },
     {
@@ -278,8 +278,8 @@ export const doctors = [
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
         fees: 60,
         address: {
-            line1: '27th Cross, Richmond',
-            line2: 'Circle, Ring Road, London'
+            line1: '27th Road, Charoen Pradit Rd',
+            line2: 'Rusamilae, Mueang Pattani District, Pattani'
         }
     },
     {
@@ -292,8 +292,8 @@ export const doctors = [
         about: 'Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies. Dr. Davis has a strong commitment to delivering comprehensive medical care, focusing on preventive medicine, early diagnosis, and effective treatment strategies.',
         fees: 30,
         address: {
-            line1: '37th Cross, Richmond',
-            line2: 'Circle, Ring Road, London'
+            line1: '37th Road, Charoen Pradit Rd',
+            line2: 'Rusamilae, Mueang Pattani District, Pattani'
         }
     },
 ]
