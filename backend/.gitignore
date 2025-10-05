@@ -1,4 +1,6 @@
 # .gitignore file
 
-/node_modules
-/.env
+node_modules
+dist
+dist-ssr
+*.local
