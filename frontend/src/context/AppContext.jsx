@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { doctors } from "../assets/frontend/assets";
+import { doctors } from "../assets/assets";
 
 export const AppContext = createContext();
 
