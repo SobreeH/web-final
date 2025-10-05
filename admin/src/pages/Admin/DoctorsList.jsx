@@ -18,8 +18,15 @@ const DoctorsList = () => {
       <h1 className="text-lg font-medium">All Doctors</h1>
       <div className="w-full flex flex-wrap gap-4 pt-5 gap-y-6">
         {doctors.map((item, index) => (
-          <div key={index}>
-            <img src={item.image} alt="" />
+          <div
+            className="border border-blue-200 rounded-xl max-w-56 overflow-hidden cursor-pointer group"
+            key={index}
+          >
+            <img
+              className="bg-blue-50 group-hover:bg-primary transition-all duration-500"
+              src={item.image}
+              alt=""
+            />
             <div>
               <p>{item.name}</p>
               <p> {item.speciality} </p>
