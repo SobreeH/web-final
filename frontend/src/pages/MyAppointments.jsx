@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 const MyAppointments = () => {
   // const { doctors } = useContext(AppContext); old code
-  const { backendUrl, token } = useContext(AppContext);
+  const { backendUrl, token, getDoctorsData } = useContext(AppContext);
 
   const [appointments, setAppointments] = useState([]);
   const months = [
@@ -57,6 +57,7 @@ const MyAppointments = () => {
       if (data.success) {
         toast.success(data.message);
         getUserAppointments();
+        getDoctorsData();
       } else {
         toast.error(data.message);
       }
@@ -120,6 +121,11 @@ const MyAppointments = () => {
                   className="cursor-pointer text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300"
                 >
                   Cancel appointment
+                </button>
+              )}
+              {item.cancelled && (
+                <button className="sm:min-48 py-2 border border-red-500 rounded text-red-500">
+                  Appointment Cancelled
                 </button>
               )}
             </div>
