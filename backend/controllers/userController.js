@@ -4,6 +4,7 @@ import userModel from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import { v2 as cloudinary } from "cloudinary";
 import doctorModel from "../models/doctorModel.js";
+import appointmentModel from "../models/appointmentModel.js";
 
 // API to register usr
 const registerUser = async (req, res) => {
@@ -127,9 +128,10 @@ const bookAppointment = async (req, res) => {
   try {
     const { userId, docId, slotDate, slotTime } = req.body;
 
-    const docData = doctorModel.findById(docId).select("-password");
+    // fetch doctor data from DB
+    const docData = await doctorModel.findById(docId).select("-password");
 
-    if (!docData.available) {
+    if (!docData || !docData.available) {
       return res.json({ success: false, message: "Doctor not available" });
     }
     let slots_booked = docData.slots_booked;
