@@ -7,26 +7,35 @@ export const AppContext = createContext();
 const AppContextProvider = (props) => {
   const currencySymbol = "฿";
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
-  const [doctors, SetDoctors] = useState([]);
-
-  const value = {
-    doctors,
-    currencySymbol,
-  };
+  const [doctors, setDoctors] = useState([]);
 
   const getDoctorsData = async () => {
     try {
       const { data } = await axios.get(backendUrl + "/api/doctor/list");
       if (data.success) {
-        SetDoctors(data.doctors);
+        setDoctors(data.doctors);
+      } else {
+        toast.error(data.message || "Failed to load doctors");
       }
-
-      useEffect(() => {
-        getDoctorsData();
-      }, []);
     } catch (error) {
-      console.log(error);
+      console.error("getDoctorsData error:", error);
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to load doctors"
+      );
     }
+  };
+
+  useEffect(() => {
+    getDoctorsData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const value = {
+    doctors,
+    currencySymbol,
+    getDoctorsData,
   };
 
   return (
