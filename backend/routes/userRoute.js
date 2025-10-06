@@ -1,5 +1,9 @@
 import express from "express";
 import {
+  createPaymentIntent,
+  confirmPayment,
+} from "../controllers/paymentController.js";
+import {
   registerUser,
   loginUser,
   getProfile,
@@ -28,5 +32,9 @@ userRouter.post(
 userRouter.post("/book-appointment", authUser, bookAppointment);
 userRouter.get("/appointments", authUser, listAppointment);
 userRouter.post("/cancel-appointment", authUser, cancelAppointment);
+
+// payment routes
+userRouter.post("/create-payment-intent", authUser, createPaymentIntent);
+userRouter.post("/confirm-payment", authUser, confirmPayment);
 
 export default userRouter;
