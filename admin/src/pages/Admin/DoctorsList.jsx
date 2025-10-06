@@ -1,12 +1,8 @@
 import React from "react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AdminContext } from "../../context/AdminContext";
-import { useEffect } from "react";
-import axios from "axios";
-import { toast } from "react-toastify";
-
 const DoctorsList = () => {
-  const { doctors, aToken, getAllDoctors, backendUrl } =
+  const { doctors, aToken, getAllDoctors, backendUrl, changeAvailability } =
     useContext(AdminContext);
 
   useEffect(
@@ -35,30 +31,7 @@ const DoctorsList = () => {
               <p> {item.speciality} </p>
               <div className="flex items-center gap-2 p-2">
                 <input
-                  onChange={async () => {
-                    try {
-                      const { data } = await axios.post(
-                        backendUrl + "/api/admin/change-availability",
-                        { docId: item._id },
-                        {
-                          headers: {
-                            Authorization: `Bearer ${aToken}`,
-                          },
-                        }
-                      );
-                      if (data.success) {
-                        toast.success(data.message);
-                        getAllDoctors();
-                      } else {
-                        toast.error(data.message);
-                      }
-                    } catch (error) {
-                      toast.error(
-                        error.response?.data?.message ||
-                          "Error changing availability"
-                      );
-                    }
-                  }}
+                  onChange={() => changeAvailability(item._id)}
                   type="checkbox"
                   checked={item.available}
                   className="w-4 h-4 accent-primary cursor-pointer"
