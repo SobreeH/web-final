@@ -1,6 +1,7 @@
-import React, { createContext, useState } from "react";
-import axios from "axios";
+import React, { createContext, useEffect, useState } from "react";
 
+import axios from "axios";
+import { toast } from "react-toastify";
 export const AppContext = createContext();
 
 const AppContextProvider = (props) => {
@@ -13,12 +14,19 @@ const AppContextProvider = (props) => {
     currencySymbol,
   };
 
-  const detDoctorsData = async () => {
+  const getDoctorsData = async () => {
     try {
       const { data } = await axios.get(backendUrl + "/api/doctor/list");
       if (data.success) {
+        SetDoctors(data.doctors);
       }
-    } catch (error) {}
+
+      useEffect(() => {
+        getDoctorsData();
+      }, []);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
