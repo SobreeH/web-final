@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import doctorModel from "../models/doctorModel.js";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
+import appointmentModel from "../models/appointmentModel.js";
 
 /// API for adding doctor
 
@@ -114,4 +116,55 @@ const allDoctors = async (req, res) => {
   }
 };
 
-export { addDoctor, loginAdmin, allDoctors };
+// DELETE doctor by ID (with guard on active appointments)
+const deleteDoctor = async (req, res) => {
+  try {
+    const { id } = req.params; // /doctor/:id
+
+    if (!id) {
+      return res.json({ success: false, message: "Doctor ID is required" });
+    }
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.json({ success: false, message: "Invalid doctor ID" });
+    }
+
+    const doctor = await doctorModel.findById(id);
+    if (!doctor) {
+      return res.json({ success: false, message: "Doctor not found" });
+    }
+
+    // Guard: prevent deletion if doctor has active appointments (not cancelled & not completed)
+    const hasActiveAppointments = await appointmentModel.exists({
+      docId: id, // appointmentModel stores docId as String
+      cancelled: false,
+      isCompleted: false,
+    });
+
+    if (hasActiveAppointments) {
+      return res.json({
+        success: false,
+        code: "DOCTOR_HAS_ACTIVE_APPOINTMENTS",
+        message:
+          "Doctor cannot be deleted because there are active appointments. Please cancel/reassign those appointments first or archive the doctor.",
+      });
+    }
+
+    // Optional: delete image from Cloudinary if you saved public_id
+    if (doctor.image_public_id) {
+      try {
+        await cloudinary.uploader.destroy(doctor.image_public_id);
+      } catch (e) {
+        console.log("Cloudinary delete error:", e.message);
+        // Continue even if Cloudinary cleanup fails
+      }
+    }
+
+    await doctor.deleteOne();
+    return res.json({ success: true, message: "Doctor deleted" });
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.message });
+  }
+};
+
+export { addDoctor, loginAdmin, allDoctors, deleteDoctor };
