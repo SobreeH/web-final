@@ -10,6 +10,7 @@ import {
   createUserAdmin,
   updateUserAdmin,
   deleteUserAdmin,
+  dashboardStats,
 } from "../controllers/adminController.js";
 import upload from "../middlewares/multer.js";
 import authAdmin from "../middlewares/authAdmin.js";
@@ -33,6 +34,8 @@ adminRouter.post("/delete-doctor", authAdmin, (req, res) => {
 
 // List all appointments (admin-only) - follows your POST list style
 adminRouter.post("/all-appointments", authAdmin, allAppointments);
+// Dashboard statistics for admin panel
+adminRouter.post("/dashboard-stats", authAdmin, dashboardStats);
 
 // Hard delete an appointment by ID (admin-only)
 adminRouter.delete("/appointment/:id", authAdmin, deleteAppointment);

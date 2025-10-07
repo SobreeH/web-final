@@ -376,6 +376,87 @@ const deleteUserAdmin = async (req, res) => {
   }
 };
 
+const dashboardStats = async (req, res) => {
+  try {
+    // Totals
+    const [totalUsers, totalDoctors, totalAppointments] = await Promise.all([
+      userModel.countDocuments({}),
+      doctorModel.countDocuments({}),
+      appointmentModel.countDocuments({}),
+    ]);
+
+    // Revenue: only appointments that are completed
+    const revenueAgg = await appointmentModel.aggregate([
+      { $match: { isCompleted: true } },
+      { $group: { _id: null, revenue: { $sum: "$amount" } } },
+    ]);
+    const revenue = revenueAgg[0]?.revenue || 0;
+
+    // Breakdown:
+    // - pending: not cancelled, not confirmed, not completed
+    // - confirmed: confirmed true, not cancelled, not completed
+    // - cancelled: cancelled true
+    // - completed: isCompleted true
+    const [pending, confirmed, cancelled, completed] = await Promise.all([
+      appointmentModel.countDocuments({
+        cancelled: false,
+        confirmed: false,
+        isCompleted: false,
+      }),
+      appointmentModel.countDocuments({
+        cancelled: false,
+        confirmed: true,
+        isCompleted: false,
+      }),
+      appointmentModel.countDocuments({ cancelled: true }),
+      appointmentModel.countDocuments({ isCompleted: true }),
+    ]);
+
+    // Today windows based on server local time
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+
+    // bookedToday: created today (date is stored as Number ms)
+    const bookedToday = await appointmentModel.countDocuments({
+      date: { $gte: start.getTime(), $lte: end.getTime() },
+    });
+
+    // scheduledToday: slotDate equals today's YYYY-MM-DD (server local)
+    const pad = (n) => String(n).padStart(2, "0");
+    const todayStr = `${start.getFullYear()}-${pad(start.getMonth() + 1)}-${pad(
+      start.getDate()
+    )}`;
+
+    const scheduledToday = await appointmentModel.countDocuments({
+      slotDate: todayStr,
+    });
+
+    // Recent appointments (5 newest by created timestamp)
+    const recentAppointments = await appointmentModel
+      .find({})
+      .sort({ date: -1 })
+      .limit(5);
+
+    return res.json({
+      success: true,
+      cards: {
+        totalUsers,
+        totalDoctors,
+        totalAppointments,
+        revenue, // THB; frontend will format
+      },
+      breakdown: { pending, confirmed, cancelled, completed },
+      today: { bookedToday, scheduledToday },
+      recentAppointments,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.message });
+  }
+};
+
 export {
   addDoctor,
   loginAdmin,
@@ -387,4 +468,5 @@ export {
   createUserAdmin,
   updateUserAdmin,
   deleteUserAdmin,
+  dashboardStats,
 };
