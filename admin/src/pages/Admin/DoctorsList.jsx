@@ -2,8 +2,14 @@ import React from "react";
 import { useContext, useEffect } from "react";
 import { AdminContext } from "../../context/AdminContext";
 const DoctorsList = () => {
-  const { doctors, aToken, getAllDoctors, backendUrl, changeAvailability } =
-    useContext(AdminContext);
+  const {
+    doctors,
+    aToken,
+    getAllDoctors,
+    backendUrl,
+    changeAvailability,
+    deleteDoctor,
+  } = useContext(AdminContext);
 
   useEffect(
     (aToken) => {
@@ -39,8 +45,15 @@ const DoctorsList = () => {
                 <p>Available</p>
               </div>
               <div>
-                <button className="bg-red-600 text-white text-sm px-10 py-2 rounded-full cursor-pointer">
-                  delete
+                <button
+                  onClick={() => {
+                    if (window.confirm("Delete this doctor permanently?")) {
+                      deleteDoctor(item._id);
+                    }
+                  }}
+                  className="text-red-600 hover:text-red-700"
+                >
+                  Delete
                 </button>
               </div>
             </div>
