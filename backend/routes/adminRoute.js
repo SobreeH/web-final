@@ -41,5 +41,13 @@ adminRouter.delete("/appointment/:id", authAdmin, deleteAppointment);
 adminRouter.post("/all-users", authAdmin, allUsers);
 adminRouter.post("/user", authAdmin, createUserAdmin);
 adminRouter.put("/user/:id", authAdmin, updateUserAdmin);
+// RESTful delete user
+adminRouter.delete("/user/:id", authAdmin, deleteUserAdmin);
+
+// Optional POST fallback for deletion if frontend cannot send DELETE
+adminRouter.post("/delete-user", authAdmin, (req, res) => {
+  req.params.id = req.body.id;
+  return deleteUserAdmin(req, res);
+});
 
 export default adminRouter;

@@ -95,7 +95,95 @@ const AdminContextProvider = (props) => {
       }
     }
   };
-  //
+  const [users, setUsers] = useState([]);
+
+  // ===== Users CRUD (Admin) =====
+  const getAllUsers = async () => {
+    try {
+      const { data } = await axios.post(
+        backendUrl + "/api/admin/all-users",
+        {},
+        { headers: { aToken } }
+      );
+      if (data?.success) {
+        setUsers(data.users || []);
+      } else {
+        toast.error(data?.message || "Failed to fetch users");
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message);
+    }
+  };
+
+  const createUser = async ({ name, email, password }) => {
+    try {
+      const { data } = await axios.post(
+        backendUrl + "/api/admin/user",
+        { name, email, password },
+        { headers: { aToken } }
+      );
+      if (data?.success) {
+        toast.success(data?.message || "User created");
+        await getAllUsers();
+        return true;
+      } else {
+        toast.error(data?.message || "Failed to create user");
+        return false;
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message);
+      return false;
+    }
+  };
+
+  const updateUser = async (id, { name, email, password }) => {
+    try {
+      const payload = {
+        ...(name !== undefined && { name }),
+        ...(email !== undefined && { email }),
+      };
+      // password optional; send only if not blank
+      if (password !== undefined && password !== "")
+        payload.password = password;
+
+      const { data } = await axios.put(
+        backendUrl + `/api/admin/user/${id}`,
+        payload,
+        { headers: { aToken } }
+      );
+      if (data?.success) {
+        toast.success(data?.message || "User updated");
+        await getAllUsers();
+        return true;
+      } else {
+        toast.error(data?.message || "Failed to update user");
+        return false;
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message);
+      return false;
+    }
+  };
+
+  const deleteUser = async (id) => {
+    try {
+      const { data } = await axios.delete(
+        backendUrl + `/api/admin/user/${id}`,
+        { headers: { aToken } }
+      );
+      if (data?.success) {
+        toast.success(data?.message || "User deleted");
+        setUsers((prev) => prev.filter((u) => u._id !== id));
+        return true;
+      } else {
+        toast.error(data?.message || "Failed to delete user");
+        return false;
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || error.message);
+      return false;
+    }
+  };
 
   const value = {
     aToken,
@@ -105,6 +193,11 @@ const AdminContextProvider = (props) => {
     getAllDoctors,
     changeAvailability,
     deleteDoctor,
+    users,
+    getAllUsers,
+    createUser,
+    updateUser,
+    deleteUser,
   };
 
   return (
