@@ -95,9 +95,42 @@ const AdminContextProvider = (props) => {
       }
     }
   };
-  const [users, setUsers] = useState([]);
+
+  // ===== NEW: Edit doctor (PATCH /api/admin/doctors/:doctorId) =====
+  // Expects FormData with optional image and fields:
+  // name, email, speciality, degree, experience, about, fees, address (JSON string)
+  const editDoctor = async (doctorId, formData) => {
+    try {
+      const { data } = await axios.patch(
+        `${backendUrl}/api/admin/doctors/${doctorId}`,
+        formData,
+        {
+          headers: {
+            aToken,
+            // axios sets boundary automatically when FormData is used,
+            // keeping explicit content type for clarity
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (data?.success) {
+        toast.success(data?.message ?? "Doctor updated");
+        // refresh the list so Edit page can show updated fields if needed
+        await getAllDoctors();
+        return true;
+      } else {
+        toast.error(data?.message ?? "Failed to update doctor");
+        return false;
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message ?? error.message);
+      return false;
+    }
+  };
 
   // ===== Users CRUD (Admin) =====
+  const [users, setUsers] = useState([]);
   const getAllUsers = async () => {
     try {
       const { data } = await axios.post(
@@ -198,6 +231,7 @@ const AdminContextProvider = (props) => {
     createUser,
     updateUser,
     deleteUser,
+    editDoctor,
   };
 
   return (

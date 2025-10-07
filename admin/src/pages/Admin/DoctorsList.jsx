@@ -1,5 +1,5 @@
-import React from "react";
-import { useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { AdminContext } from "../../context/AdminContext";
 const DoctorsList = () => {
   const {
@@ -11,12 +11,9 @@ const DoctorsList = () => {
     deleteDoctor,
   } = useContext(AdminContext);
 
-  useEffect(
-    (aToken) => {
-      getAllDoctors();
-    },
-    [aToken]
-  );
+  useEffect(() => {
+    getAllDoctors();
+  }, [aToken]);
 
   return (
     <div className="m-5 max-h-[90vh] overflow-y-scroll">
@@ -43,6 +40,13 @@ const DoctorsList = () => {
                   className="w-4 h-4 accent-primary cursor-pointer"
                 />
                 <p>Available</p>
+
+                <Link
+                  to={`/doctors/${item._id}/edit`}
+                  className="text-blue-600 hover:text-blue-700"
+                >
+                  Edit
+                </Link>
               </div>
               <div>
                 <button
