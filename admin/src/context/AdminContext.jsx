@@ -96,19 +96,22 @@ const AdminContextProvider = (props) => {
     }
   };
 
-  // ===== NEW: Edit doctor (PATCH /api/admin/doctors/:doctorId) =====
-  // Expects FormData with optional image and fields:
-  // name, email, speciality, degree, experience, about, fees, address (JSON string)
-  const editDoctor = async (doctorId, formData) => {
+  // ===== UPDATED: Edit doctor (PATCH /api/admin/doctors/:doctorId) =====
+  // Accepts FormData with fields: name, email, speciality, degree, experience, about, fees, address (JSON string), image (optional).
+  // Additionally accepts an optional password (>= 8 chars) which is appended to the FormData only if non-empty.
+  const editDoctor = async (doctorId, formData, { password } = {}) => {
     try {
+      // Append password only if provided and non-empty (keeps minimal API shape)
+      if (password !== undefined && password !== "" && formData?.append) {
+        formData.append("password", password);
+      }
+
       const { data } = await axios.patch(
         `${backendUrl}/api/admin/doctors/${doctorId}`,
         formData,
         {
           headers: {
             aToken,
-            // axios sets boundary automatically when FormData is used,
-            // keeping explicit content type for clarity
             "Content-Type": "multipart/form-data",
           },
         }
@@ -116,7 +119,7 @@ const AdminContextProvider = (props) => {
 
       if (data?.success) {
         toast.success(data?.message ?? "Doctor updated");
-        // refresh the list so Edit page can show updated fields if needed
+        // Refresh list so any view relying on context reflects latest values
         await getAllDoctors();
         return true;
       } else {

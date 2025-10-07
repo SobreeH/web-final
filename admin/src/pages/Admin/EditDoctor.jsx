@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // <-- added useNavigate
 import { assets } from "../../assets/assets";
 import { AdminContext } from "../../context/AdminContext";
 
 const EditDoctor = () => {
+  const navigate = useNavigate(); // <-- for redirect after update
   const { doctorId } = useParams();
   const { doctors, getAllDoctors, editDoctor } = useContext(AdminContext);
 
-  // Local state mirrors AddDoctor.jsx (no password for edit)
+  // Local state mirrors AddDoctor.jsx (password optional on edit)
   const [docImg, setDocImg] = useState(false);
   const [previewUrl, setPreviewUrl] = useState("");
   const [name, setName] = useState("");
@@ -19,6 +20,7 @@ const EditDoctor = () => {
   const [degree, setDegree] = useState("");
   const [address1, setAddress1] = useState("");
   const [address2, setAddress2] = useState("");
+  const [password, setPassword] = useState(""); // <-- NEW: optional password
 
   // Find the doctor from context when available
   const doc = useMemo(
@@ -47,6 +49,7 @@ const EditDoctor = () => {
       setAddress2(doc.address?.line2 ?? "");
       setPreviewUrl(doc.image ?? "");
       setDocImg(false);
+      setPassword(""); // never pre-fill password
     }
   }, [doc]);
 
@@ -74,7 +77,7 @@ const EditDoctor = () => {
     if (!doc) return; // no-op if not loaded yet
 
     const formData = new FormData();
-    // Append only fields we allow to edit (mirrors AddDoctor keys, minus password)
+    // Append only fields we allow to edit (mirrors AddDoctor keys, minus required password)
     if (docImg) formData.append("image", docImg);
     formData.append("name", name);
     formData.append("email", email);
@@ -88,10 +91,12 @@ const EditDoctor = () => {
       JSON.stringify({ line1: address1, line2: address2 })
     );
 
-    const ok = await editDoctor(doctorId, formData);
-    if (ok && !docImg) {
-      // Stay on page (MyProfile behavior), no navigation.
-      // If image was not changed, keep current preview. If changed, preview already updated.
+    // Pass optional password via the context helper (it appends only if non-empty)
+    const ok = await editDoctor(doctorId, formData, { password });
+
+    if (ok) {
+      // Redirect to doctors list after successful update
+      navigate("/doctor-list");
     }
   };
 
@@ -262,6 +267,21 @@ const EditDoctor = () => {
           />
         </div>
 
+        {/* NEW: Password (optional) */}
+        <div className="flex flex-col gap-2">
+          <label className="text-gray-700">New Password (optional)</label>
+          <input
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            className="border rounded px-3 py-2"
+            type="password"
+            placeholder="Enter new password (min 8 chars)"
+          />
+          <p className="text-xs text-gray-500">
+            Leave blank to keep the current password.
+          </p>
+        </div>
+
         <div className="flex gap-3 pt-2">
           <button
             type="submit"
@@ -286,6 +306,7 @@ const EditDoctor = () => {
                 setAddress2(doc.address?.line2 ?? "");
                 setDocImg(false);
                 setPreviewUrl(doc.image ?? assets.upload_area);
+                setPassword("");
               }
             }}
             className="border px-5 py-2 rounded hover:bg-gray-50"

@@ -87,7 +87,7 @@ const addDoctor = async (req, res) => {
   }
 };
 
-// NEW: API to update an existing doctor by ID (admin only)
+//  API to update an existing doctor by ID (admin only)
 const updateDoctorById = async (req, res) => {
   try {
     const { doctorId } = req.params;
@@ -113,6 +113,7 @@ const updateDoctorById = async (req, res) => {
       about,
       fees,
       address,
+      password,
     } = req.body ?? {};
 
     const update = {};
@@ -140,6 +141,18 @@ const updateDoctorById = async (req, res) => {
       } catch (e) {
         return res.json({ success: false, message: "Invalid address format" });
       }
+    }
+
+    //  Optional password update
+    if (password !== undefined && password !== "") {
+      if (String(password).length < 8) {
+        return res.json({
+          success: false,
+          message: "Password must have at least 8 characters/Numbers",
+        });
+      }
+      const salt = await bcrypt.genSalt(5);
+      update.password = await bcrypt.hash(password, salt);
     }
 
     // Optional image replacement
