@@ -1,10 +1,12 @@
 import validator from "validator";
 import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
-import doctorModel from "../models/doctorModel.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import doctorModel from "../models/doctorModel.js";
 import appointmentModel from "../models/appointmentModel.js";
+import userModel from "../models/userModel.js";
+
 // API to add new doctor by admin
 const addDoctor = async (req, res) => {
   try {
@@ -217,6 +219,163 @@ const deleteAppointment = async (req, res) => {
   }
 };
 
+// List all users (without passwords), newest first
+const allUsers = async (req, res) => {
+  try {
+    const users = await userModel
+      .find({})
+      .select("-password")
+      .sort({ _id: -1 });
+    return res.json({ success: true, users });
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.message });
+  }
+};
+
+// Create user (name, email, password)
+const createUserAdmin = async (req, res) => {
+  try {
+    const { name, email, password } = req.body || {};
+    if (!name || !email || !password) {
+      return res.json({ success: false, message: "Missing details" });
+    }
+    if (!validator.isEmail(email)) {
+      return res.json({ success: false, message: "Enter valid email" });
+    }
+    if (String(password).length < 8) {
+      return res.json({
+        success: false,
+        message: "Password must have at least 8 characters/Numbers",
+      });
+    }
+    // unique email
+    const existed = await userModel.findOne({ email });
+    if (existed) {
+      return res.json({ success: false, message: "Email already in use" });
+    }
+    const salt = await bcrypt.genSalt(5);
+    const hashed = await bcrypt.hash(password, salt);
+
+    const newUser = new userModel({ name, email, password: hashed });
+    const saved = await newUser.save();
+
+    const safe = saved.toObject();
+    delete safe.password;
+
+    return res.json({ success: true, message: "User created", user: safe });
+  } catch (error) {
+    console.log(error);
+    // handle duplicate key just in case
+    if (error?.code === 11000) {
+      return res.json({ success: false, message: "Email already in use" });
+    }
+    return res.json({ success: false, message: error.message });
+  }
+};
+
+// Update user (name?, email?, password?) — password optional (blank/omitted = unchanged)
+const updateUserAdmin = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return res.json({ success: false, message: "Invalid user ID" });
+    }
+
+    const { name, email, password } = req.body || {};
+    const update = {};
+
+    if (name !== undefined) update.name = name;
+    if (email !== undefined) {
+      if (!validator.isEmail(email)) {
+        return res.json({ success: false, message: "Enter valid email" });
+      }
+      update.email = email;
+    }
+    if (password !== undefined && password !== "") {
+      if (String(password).length < 8) {
+        return res.json({
+          success: false,
+          message: "Password must have at least 8 characters/Numbers",
+        });
+      }
+      const salt = await bcrypt.genSalt(5);
+      update.password = await bcrypt.hash(password, salt);
+    }
+
+    const updated = await userModel.findByIdAndUpdate(id, update, {
+      new: true,
+    });
+    if (!updated) {
+      return res.json({ success: false, message: "User not found" });
+    }
+    return res.json({ success: true, message: "User updated" });
+  } catch (error) {
+    console.log(error);
+    if (error?.code === 11000) {
+      return res.json({ success: false, message: "Email already in use" });
+    }
+    return res.json({ success: false, message: error.message });
+  }
+};
+
+// Delete user (cascade delete appointments + release slots)
+const deleteUserAdmin = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      return res.json({ success: false, message: "Invalid user ID" });
+    }
+
+    const user = await userModel.findById(id);
+    if (!user) {
+      return res.json({ success: false, message: "User not found" });
+    }
+
+    // Find all their appointments
+    const appts = await appointmentModel.find({ userId: id });
+
+    // For each appointment, if not cancelled, free doctor slot
+    for (const appt of appts) {
+      if (!appt.cancelled) {
+        const { docId, slotDate, slotTime } = appt;
+        if (docId && slotDate && slotTime) {
+          try {
+            const doctor = await doctorModel.findById(docId);
+            if (
+              doctor &&
+              doctor.slots_booked &&
+              doctor.slots_booked[slotDate]
+            ) {
+              doctor.slots_booked[slotDate] = doctor.slots_booked[
+                slotDate
+              ].filter((t) => t !== slotTime);
+              await doctor.save();
+            }
+          } catch (e) {
+            console.log("Slot release error (deleteUserAdmin):", e?.message);
+          }
+        }
+      }
+    }
+
+    // Delete their appointments
+    const delRes = await appointmentModel.deleteMany({ userId: id });
+
+    // Delete the user
+    await userModel.findByIdAndDelete(id);
+
+    return res.json({
+      success: true,
+      message: "User and appointments deleted",
+      deletedAppointments: delRes?.deletedCount ?? appts.length,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.message });
+  }
+};
+
 export {
   addDoctor,
   loginAdmin,
@@ -224,4 +383,8 @@ export {
   deleteDoctor,
   allAppointments,
   deleteAppointment,
+  allUsers,
+  createUserAdmin,
+  updateUserAdmin,
+  deleteUserAdmin,
 };

@@ -1,11 +1,15 @@
 import express from "express";
 import {
-  addDoctor,
-  allDoctors,
   loginAdmin,
+  allDoctors,
+  addDoctor,
   deleteDoctor,
   allAppointments,
   deleteAppointment,
+  allUsers,
+  createUserAdmin,
+  updateUserAdmin,
+  deleteUserAdmin,
 } from "../controllers/adminController.js";
 import upload from "../middlewares/multer.js";
 import authAdmin from "../middlewares/authAdmin.js";
@@ -32,5 +36,10 @@ adminRouter.post("/all-appointments", authAdmin, allAppointments);
 
 // Hard delete an appointment by ID (admin-only)
 adminRouter.delete("/appointment/:id", authAdmin, deleteAppointment);
+
+// Users management (admin-only)
+adminRouter.post("/all-users", authAdmin, allUsers);
+adminRouter.post("/user", authAdmin, createUserAdmin);
+adminRouter.put("/user/:id", authAdmin, updateUserAdmin);
 
 export default adminRouter;
