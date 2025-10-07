@@ -6,6 +6,62 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import appointmentModel from "../models/appointmentModel.js";
 
+import mongoose from "mongoose";
+
+// API for showing all appointment
+
+// List all appointments (admin-only)
+const allAppointments = async (req, res) => {
+  try {
+    const appointments = await appointmentModel.find({}).sort({ date: -1 });
+    return res.json({ success: true, appointments });
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.message });
+  }
+};
+
+// Hard delete one appointment (admin-only), and release the doctor's slot if needed
+const deleteAppointment = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.json({
+        success: false,
+        message: "Appointment ID is required",
+      });
+    }
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.json({ success: false, message: "Invalid appointment ID" });
+    }
+
+    const appt = await appointmentModel.findById(id);
+    if (!appt) {
+      return res.json({ success: false, message: "Appointment not found" });
+    }
+
+    // If the appointment isn't cancelled, free the slot
+    const { docId, slotDate, slotTime, cancelled } = appt;
+    if (!cancelled && docId && slotDate && slotTime) {
+      const doctor = await doctorModel.findById(docId);
+      if (doctor && doctor.slots_booked && doctor.slots_booked[slotDate]) {
+        const filtered = doctor.slots_booked[slotDate].filter(
+          (t) => t !== slotTime
+        );
+        doctor.slots_booked[slotDate] = filtered;
+        await doctor.save(); // persist updated slots_booked
+      }
+    }
+
+    await appointmentModel.findByIdAndDelete(id);
+    return res.json({ success: true, message: "Appointment deleted" });
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.message });
+  }
+};
+
 /// API for adding doctor
 
 const addDoctor = async (req, res) => {
@@ -167,4 +223,11 @@ const deleteDoctor = async (req, res) => {
   }
 };
 
-export { addDoctor, loginAdmin, allDoctors, deleteDoctor };
+export {
+  addDoctor,
+  loginAdmin,
+  allDoctors,
+  deleteDoctor,
+  allAppointments,
+  deleteAppointment,
+};
