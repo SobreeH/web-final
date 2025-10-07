@@ -111,7 +111,7 @@ const MyAppointments = () => {
             <div className="flex flex-col gap-2 justify-end">
               {!item.cancelled && (
                 <button className="cursor-pointer text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-blue-500 hover:text-white transition-all duration-300">
-                  Pay Online in advance
+                  Confirm Appointment
                 </button>
               )}
               {!item.cancelled && (
