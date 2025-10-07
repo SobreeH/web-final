@@ -236,6 +236,50 @@ const cancelAppointment = async (req, res) => {
   }
 };
 
+// API to confirm appointment
+
+const confirmAppointment = async (req, res) => {
+  try {
+    const { userId, appointmentId } = req.body;
+
+    const appointment = await appointmentModel.findById(appointmentId);
+
+    if (!appointment) {
+      return res.json({ success: false, message: "Appointment not found" });
+    }
+
+    // verify appointment user
+    if (appointment.userId.toString() !== userId) {
+      return res.json({ success: false, message: "Unauthorized Action" });
+    }
+
+    // validate state
+    if (appointment.cancelled || appointment.isCompleted) {
+      return res.json({
+        success: false,
+        message: "Cannot confirm this appointment",
+      });
+    }
+
+    // idempotent confirm
+    if (appointment.confirmed) {
+      return res.json({
+        success: true,
+        message: "Appointment already confirmed",
+      });
+    }
+
+    await appointmentModel.findByIdAndUpdate(appointmentId, {
+      confirmed: true,
+    });
+
+    res.json({ success: true, message: "Appointment confirmed" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -244,4 +288,5 @@ export {
   bookAppointment,
   listAppointment,
   cancelAppointment,
+  confirmAppointment,
 };
