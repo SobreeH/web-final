@@ -1,3 +1,5 @@
+// backend/controllers/adminController.js
+
 import validator from "validator";
 import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
@@ -85,10 +87,90 @@ const addDoctor = async (req, res) => {
   }
 };
 
+// NEW: API to update an existing doctor by ID (admin only)
+const updateDoctorById = async (req, res) => {
+  try {
+    const { doctorId } = req.params;
+
+    // Validate doctor ID
+    if (!doctorId || !mongoose.Types.ObjectId.isValid(doctorId)) {
+      return res.json({ success: false, message: "Invalid doctor ID" });
+    }
+
+    // Ensure the doctor exists
+    const existing = await doctorModel.findById(doctorId);
+    if (!existing) {
+      return res.json({ success: false, message: "Doctor not found" });
+    }
+
+    // Collect allowed fields from body
+    const {
+      name,
+      email,
+      speciality,
+      degree,
+      experience,
+      about,
+      fees,
+      address,
+    } = req.body ?? {};
+
+    const update = {};
+
+    if (name !== undefined) update.name = name;
+    if (email !== undefined) update.email = email;
+    if (speciality !== undefined) update.speciality = speciality;
+    if (degree !== undefined) update.degree = degree;
+    if (experience !== undefined) update.experience = experience;
+    if (about !== undefined) update.about = about;
+    if (fees !== undefined && fees !== "") update.fees = Number(fees);
+
+    if (address !== undefined) {
+      try {
+        const parsed =
+          typeof address === "string" ? JSON.parse(address) : address;
+        if (parsed && typeof parsed === "object") {
+          update.address = parsed;
+        } else {
+          return res.json({
+            success: false,
+            message: "Invalid address format",
+          });
+        }
+      } catch (e) {
+        return res.json({ success: false, message: "Invalid address format" });
+      }
+    }
+
+    // Optional image replacement
+    if (req.file) {
+      const imageUpload = await cloudinary.uploader.upload(req.file.path, {
+        resource_type: "image",
+      });
+      update.image = imageUpload.secure_url;
+
+      // Note: We don't have public_id stored, so we are not deleting old image.
+      // If you later store public_id in the model, we can clean up previous image here.
+    }
+
+    await doctorModel.findByIdAndUpdate(doctorId, update, { new: true });
+
+    return res.json({ success: true, message: "Doctor updated" });
+  } catch (error) {
+    console.log(error);
+    if (error?.code === 11000) {
+      // Duplicate key (likely email)
+      return res.json({ success: false, message: "Email already in use" });
+    }
+    return res.json({ success: false, message: error.message });
+  }
+};
+
 // API for admin login
 const loginAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     if (
       email === process.env.ADMIN_EMAIL &&
       password === process.env.ADMIN_PASSWORD
@@ -105,7 +187,6 @@ const loginAdmin = async (req, res) => {
 };
 
 // API to get all doctors list for admin panel
-
 const allDoctors = async (req, res) => {
   try {
     const doctors = await doctorModel.find({}).select("-password");
@@ -236,7 +317,7 @@ const allUsers = async (req, res) => {
 // Create user (name, email, password)
 const createUserAdmin = async (req, res) => {
   try {
-    const { name, email, password } = req.body || {};
+    const { name, email, password } = req.body ?? {};
     if (!name || !email || !password) {
       return res.json({ success: false, message: "Missing details" });
     }
@@ -249,17 +330,18 @@ const createUserAdmin = async (req, res) => {
         message: "Password must have at least 8 characters/Numbers",
       });
     }
+
     // unique email
     const existed = await userModel.findOne({ email });
     if (existed) {
       return res.json({ success: false, message: "Email already in use" });
     }
+
     const salt = await bcrypt.genSalt(5);
     const hashed = await bcrypt.hash(password, salt);
 
     const newUser = new userModel({ name, email, password: hashed });
     const saved = await newUser.save();
-
     const safe = saved.toObject();
     delete safe.password;
 
@@ -282,7 +364,7 @@ const updateUserAdmin = async (req, res) => {
       return res.json({ success: false, message: "Invalid user ID" });
     }
 
-    const { name, email, password } = req.body || {};
+    const { name, email, password } = req.body ?? {};
     const update = {};
 
     if (name !== undefined) update.name = name;
@@ -292,6 +374,7 @@ const updateUserAdmin = async (req, res) => {
       }
       update.email = email;
     }
+
     if (password !== undefined && password !== "") {
       if (String(password).length < 8) {
         return res.json({
@@ -309,6 +392,7 @@ const updateUserAdmin = async (req, res) => {
     if (!updated) {
       return res.json({ success: false, message: "User not found" });
     }
+
     return res.json({ success: true, message: "User updated" });
   } catch (error) {
     console.log(error);
@@ -390,7 +474,7 @@ const dashboardStats = async (req, res) => {
       { $match: { isCompleted: true } },
       { $group: { _id: null, revenue: { $sum: "$amount" } } },
     ]);
-    const revenue = revenueAgg[0]?.revenue || 0;
+    const revenue = revenueAgg[0]?.revenue ?? 0;
 
     // Breakdown:
     // - pending: not cancelled, not confirmed, not completed
@@ -428,7 +512,6 @@ const dashboardStats = async (req, res) => {
     const todayStr = `${start.getFullYear()}-${pad(start.getMonth() + 1)}-${pad(
       start.getDate()
     )}`;
-
     const scheduledToday = await appointmentModel.countDocuments({
       slotDate: todayStr,
     });
@@ -459,6 +542,7 @@ const dashboardStats = async (req, res) => {
 
 export {
   addDoctor,
+  updateDoctorById,
   loginAdmin,
   allDoctors,
   deleteDoctor,

@@ -11,6 +11,7 @@ import {
   updateUserAdmin,
   deleteUserAdmin,
   dashboardStats,
+  updateDoctorById,
 } from "../controllers/adminController.js";
 import upload from "../middlewares/multer.js";
 import authAdmin from "../middlewares/authAdmin.js";
@@ -18,10 +19,19 @@ import { ChangeAvailability } from "../controllers/doctorController.js";
 
 const adminRouter = express.Router();
 
+// Admin routes
 adminRouter.post("/add-doctor", authAdmin, upload.single("image"), addDoctor);
 adminRouter.post("/login", loginAdmin);
 adminRouter.post("/all-doctors", authAdmin, allDoctors);
 adminRouter.post("/change-availability", authAdmin, ChangeAvailability);
+
+// Update doctor by ID with image upload support
+adminRouter.patch(
+  "/doctors/:doctorId",
+  authAdmin,
+  upload.single("image"),
+  updateDoctorById
+);
 
 // RESTful delete
 adminRouter.delete("/doctor/:id", authAdmin, deleteDoctor);
