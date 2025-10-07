@@ -283,6 +283,21 @@ const completeAppointmentByDoctor = async (req, res) => {
   }
 };
 
+// NEW: list all users for doctors (authDoctor)
+// Returns minimal fields and will be rendered as "Name (email)" on the client.
+// Proof of concept: loads all at once (no pagination).
+const listUsersForDoctors = async (req, res) => {
+  try {
+    const users = await userModel
+      .find({}, { name: 1, email: 1 }) // _id is included by default
+      .sort({ name: 1 });
+    return res.json({ success: true, users });
+  } catch (error) {
+    console.log(error);
+    return res.json({ success: false, message: error.message });
+  }
+};
+
 export {
   ChangeAvailability,
   doctorList,
@@ -292,4 +307,5 @@ export {
   updateAppointmentByDoctor,
   deleteAppointmentByDoctor,
   completeAppointmentByDoctor,
+  listUsersForDoctors,
 };

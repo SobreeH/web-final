@@ -8,6 +8,7 @@ import {
   updateAppointmentByDoctor,
   deleteAppointmentByDoctor,
   completeAppointmentByDoctor,
+  listUsersForDoctors,
 } from "../controllers/doctorController.js";
 import authDoctor from "../middlewares/authDoctor.js";
 
@@ -29,5 +30,7 @@ doctorRouter.patch(
   authDoctor,
   completeAppointmentByDoctor
 );
+
+doctorRouter.get("/users", authDoctor, listUsersForDoctors);
 
 export default doctorRouter;

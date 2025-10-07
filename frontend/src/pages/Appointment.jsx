@@ -63,7 +63,7 @@ const Appointment = () => {
         let year = currentDate.getFullYear();
 
         // checking dates that are booked
-        const slotDate = day + "_" + month + "_" + year;
+        const slotDate = day + "-" + month + "-" + year;
         const slotTime = formattedTime;
 
         const isSlotAvailable =
@@ -102,7 +102,7 @@ const Appointment = () => {
       let month = date.getMonth() + 1;
       let year = date.getFullYear();
 
-      const slotDate = day + "_" + month + "_" + year;
+      const slotDate = day + "-" + month + "-" + year;
 
       // console.log(slotDate); // debug slotDate
 

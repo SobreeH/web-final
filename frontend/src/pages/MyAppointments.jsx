@@ -25,7 +25,7 @@ const MyAppointments = () => {
   ];
 
   const slotDateFormat = (slotDate) => {
-    const dateArray = slotDate.split("_");
+    const dateArray = slotDate.split("-");
     return (
       dateArray[0] + " " + months[Number(dateArray[1])] + " " + dateArray[2]
     );
@@ -129,32 +129,40 @@ const MyAppointments = () => {
             </div>
             <div>
               <div className="flex flex-col gap-2 justify-end">
-                {!item.cancelled && !item.confirmed && (
+                {!item.cancelled && !item.confirmed && !item.isCompleted && (
                   <button
                     onClick={() => confirmAppointment(item._id)}
-                    className="cursor-pointer text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-blue-500 hover:text-white transition-all duration-300"
+                    className="cursor-pointer text-sm text-black text-center sm:min-w-48 py-2 border rounded hover:bg-blue-500 hover:text-white transition-all duration-300"
                   >
                     Confirm Appointment
                   </button>
                 )}
-                {item.confirmed && !item.cancelled && (
-                  <button className=" text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded bg-green-500 hover:text-white transition-all duration-300">
-                    Confirmed Appointment{" "}
-                  </button>
-                )}
-                {!item.confirmed && item.cancelled && (
-                  <button className=" text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded bg-red-500 hover:text-white transition-all duration-300">
-                    Cancelled Appointment{" "}
-                  </button>
-                )}
-                {!item.cancelled && !item.confirmed && (
+                {!item.cancelled && !item.confirmed && !item.isCompleted && (
                   <button
                     onClick={() => cancelAppointment(item._id)}
-                    className="cursor-pointer text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300"
+                    className="cursor-pointer text-sm text-black text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300"
                   >
                     Cancel appointment
                   </button>
                 )}
+                {item.confirmed && !item.cancelled && !item.isCompleted && (
+                  <button className=" text-sm text-black text-center sm:min-w-48 py-2 border rounded bg-blue-500 hover:text-white transition-all duration-300">
+                    Confirmed Appointment{" "}
+                  </button>
+                )}
+                {item.confirmed && !item.cancelled && item.isCompleted && (
+                  <button className=" text-sm text-black text-center sm:min-w-48 py-2 border rounded bg-green-500 hover:text-white transition-all duration-300">
+                    Completed Appointment{" "}
+                  </button>
+                )}
+                {!item.confirmed &&
+                  item.cancelled &&
+                  !item.isCompleted &&
+                  !item.isCompleted && (
+                    <button className=" text-sm text-black text-center sm:min-w-48 py-2 border rounded bg-red-500 hover:text-white transition-all duration-300">
+                      Cancelled Appointment{" "}
+                    </button>
+                  )}
               </div>
             </div>
           </div>
