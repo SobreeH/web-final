@@ -38,6 +38,11 @@ const DoctorsList = () => {
                 />
                 <p>Available</p>
               </div>
+              <div>
+                <button className="bg-red-600 text-white text-sm px-10 py-2 rounded-full cursor-pointer">
+                  delete
+                </button>
+              </div>
             </div>
           </div>
         ))}
